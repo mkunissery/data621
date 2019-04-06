@@ -21,7 +21,7 @@ library(tidyverse)
 library(knitr)
 library(caret)
 
-class_data <- read_csv("https://raw.githubusercontent.com/mkunissery/data621/master/classification-output-data.csv")
+class_data <- read_csv("https://raw.githubusercontent.com/mkunissery/Data621/master/HW2/classification-output-data.csv")
 ```
 
 
