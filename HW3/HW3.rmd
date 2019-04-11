@@ -47,7 +47,7 @@ Crime has existed as long as humans have been. Various factors in combination su
 This report presents a statistical model aimed at determining variables that are independently associated with crime rates above or below the median.
 
 
-## DATA EXPLORATION
+## 1. DATA EXPLORATION
 
 
 ### Data Describe
