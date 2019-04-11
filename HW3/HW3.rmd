@@ -57,14 +57,6 @@ summary <- describe(train[,c(1:11)])[,c(2:5,8,9,11,12)]
 knitr::kable(summary)
 ```
 
-
-```{r data dictionary load, include=FALSE, cache=TRUE}
-download.file("https://github.com/mkunissery/Data621/blob/master/HW3/Data%20Dictionary.xlsx?raw=true", destfile = "DataDict.xlsx", mode = 'wb')
-daDict <- read.xlsx("DataDict.xlsx", sheetIndex = 1)
-file.remove(dir(getwd(), pattern = "DataDict.xlsx", full.names = TRUE))
-dfDict <- data.frame(matrix(unlist(daDict), nrow=14, byrow=T),stringsAsFactors=FALSE)
-```
-
 ### Check distribution 
 
 Check distribution of the target variable in our training data.
@@ -294,3 +286,10 @@ knitr::kable(head(finaldf))
 
 knitr::kable(table(finaldf$prediction))
 ```
+
+
+## R source code
+
+Please see [HW3.rmd](https://raw.githubusercontent.com/mkunissery/Data621/master/HW3/HW3.rmd) on GitHub for source code.   
+Prediction File [Predictions.csv](https://raw.githubusercontent.com/mkunissery/Data621/master/HW3/Predictions.csv)
+
