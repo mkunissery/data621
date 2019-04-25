@@ -1,0 +1,129 @@
+---
+title: "Data 621 - HW 4"
+author: "Murali Kunissery"
+date: "April 24, 2019"
+output:  
+  prettydoc::html_pretty:
+    theme: architect
+    highlight: vignette
+---
+
+
+
+```{r message=FALSE, warning=FALSE, include=FALSE}
+library(caTools)
+library(tidyverse)
+library(knitr)
+library(psych)
+library(readr)
+library(kableExtra)
+library(ggiraph)
+library(cowplot)
+library(reshape2)
+library(corrgram)
+library(gridExtra)
+library(usdm)
+library(mice)
+library(pROC)
+library(reshape2)
+library(caret)
+library(ROCR)
+library(Amelia)
+```
+
+
+```{r}
+  train_insurance <- read.csv("https://raw.githubusercontent.com/mkunissery/Data621/master/HW4/insurance_training_data.csv") %>%
+                            dplyr::select(-INDEX) %>% 
+  mutate(
+    INCOME = as.numeric(INCOME),
+    HOME_VAL = as.numeric(HOME_VAL),
+    BLUEBOOK = as.numeric(BLUEBOOK),
+    OLDCLAIM = as.numeric(OLDCLAIM),
+    MSTATUS = as.factor(str_remove(MSTATUS, "^z_")),
+    SEX = as.factor(str_remove(SEX, "^z_")),
+    EDUCATION = as.factor(str_remove(EDUCATION, "^z_")),
+    JOB = as.factor(str_remove(JOB, "^z_")),
+    CAR_TYPE = as.factor(str_remove(CAR_TYPE, "^z_")),
+    URBANICITY = as.factor(str_remove(URBANICITY, "^z_")))
+
+eval_data <- read.csv("https://raw.githubusercontent.com/mkunissery/Data621/master/HW4/insurance-evaluation-data.csv") %>% 
+    dplyr::select(-INDEX) %>% 
+  mutate(
+    INCOME = as.numeric(INCOME),
+    HOME_VAL = as.numeric(HOME_VAL),
+    BLUEBOOK = as.numeric(BLUEBOOK),
+    OLDCLAIM = as.numeric(OLDCLAIM),
+    MSTATUS = as.factor(str_remove(MSTATUS, "^z_")),
+    SEX = as.factor(str_remove(SEX, "^z_")),
+    EDUCATION = as.factor(str_remove(EDUCATION, "^z_")),
+    JOB = as.factor(str_remove(JOB, "^z_")),
+    CAR_TYPE = as.factor(str_remove(CAR_TYPE, "^z_")),
+    URBANICITY = as.factor(str_remove(URBANICITY, "^z_"))
+  )
+  
+```
+
+
+Overview In this homework assignment, you will explore, analyze and model a data set containing approximately 8000 records representing a customer at an auto insurance company. Each record has two response variables. The first response variable, TARGET_FLAG, is a 1 or a 0. A “1” means that the person was in a car crash. A zero means that the person was not in a car crash. The second response variable is TARGET_AMT. This value is zero if the person did not crash their car. But if they did crash their car, this number will be a value greater than zero. 
+ 
+Your objective is to build multiple linear regression and binary logistic regression models on the training data to predict the probability that a person will crash their car and also the amount of money it will cost if the person does crash their car. You can only use the variables given to you (or variables that you derive from the variables provided). Below is a short description of the variables of interest in the data set: 
+
+
+```{r echo=FALSE}
+insurance_desc <- describe(train_insurance)
+insurance_desc$na_count <- sapply(train_insurance, function(y) sum(length(which(is.na(y)))))
+
+kable(insurance_desc, "html", escape = F) %>%
+  kable_styling("striped", full_width = T) %>%
+  column_spec(1, bold = T) %>%
+  scroll_box(width = "100%", height = "700px")
+```
+
+
+##Visual Exploration
+
+###Boxplots
+
+The below boxplots show all of the variables listed in the dataset.  This visualization will assist in showing how the data is spread for each variable.
+
+
+```{r}
+ggplot(melt(train_insurance), aes(x=factor(variable), y=value)) + 
+  facet_wrap(~variable, scale="free") + 
+  geom_boxplot()
+```
+
+
+###Histograms
+```{r}
+ggplot(melt(train_insurance), aes(x=value)) + 
+  facet_wrap(~variable, scale="free") + 
+  geom_histogram(bins=50)
+```
+
+
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+corrgram(drop_na(train_insurance), order=TRUE,
+         upper.panel=panel.cor, main="Crime")
+```
+
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+missmap(train_insurance, main = "Missing values vs observed")
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
